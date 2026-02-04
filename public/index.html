@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ciku File Converter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --secondary: #4CAF50;
+            --accent: #FF6584;
+            --glass: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        .container {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #2D3748;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        p.subtitle {
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 5px;
+            border-radius: 30px;
+            display: inline-flex;
+        }
+
+        .tab-btn {
+            padding: 10px 25px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 25px;
+            font-weight: 500;
+            color: #555;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .upload-area {
+            border: 2px dashed #CBD5E0;
+            padding: 40px 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            background-color: rgba(255, 255, 255, 0.5);
+            transition: border-color 0.3s, background-color 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background-color: rgba(108, 99, 255, 0.05);
+        }
+
+        .upload-area p {
+            margin: 0;
+            color: #718096;
+            font-weight: 500;
+        }
+
+        .upload-area input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4A5568;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            background: white;
+            outline: none;
+            transition: border-color 0.2s;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px top 50%;
+            background-size: 0.65rem auto;
+        }
+
+        select:focus {
+            border-color: var(--primary);
+        }
+
+        button.action-btn {
+            background: linear-gradient(to right, var(--primary), #8E86FF);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            width: 100%;
+            font-size: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(108, 99, 255, 0.2);
+        }
+
+        button.action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(108, 99, 255, 0.3);
+        }
+
+        button.action-btn:active {
+            transform: translateY(0);
+        }
+
+        #loading {
+            margin-top: 20px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .result-item {
+            background: white;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            animation: slideIn 0.3s ease-out;
+            text-align: left;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-item span {
+            font-size: 0.9rem;
+            color: #4A5568;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 60%;
+        }
+
+        .result-item a {
+            text-decoration: none;
+            color: white;
+            background-color: var(--secondary);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .result-item a:hover {
+            background-color: #43A047;
+        }
+
+        /* File selected text */
+        #fileLabel {
+            pointer-events: none;
+        }
+
+        .support-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .support-text {
+            font-size: 0.9rem;
+            color: #4A5568;
+            margin-bottom: 15px;
+        }
+
+        .saweria-btn {
+            background-color: #fab005;
+            /* Saweria Color */
+            color: #333;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .saweria-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(250, 176, 5, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Ciku File Converter</h1>
+        <p class="subtitle">Fast, secure, and modern file conversion tool.</p>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="setCategory('document')">Document</button>
+            <button class="tab-btn" onclick="setCategory('image')">Image</button>
+            <button class="tab-btn" onclick="setCategory('av')">Audio/Video</button>
+        </div>
+
+        <div
+            style="background: rgba(76, 175, 80, 0.15); border: 1px solid rgba(76, 175, 80, 0.4); border-radius: 12px; padding: 12px; margin-bottom: 25px; font-size: 0.85rem; color: #1B5E20; display: flex; align-items: center; text-align: left;">
+            <svg style="width:20px;height:20px;margin-right:10px;flex-shrink:0" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                    d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,5C13.66,5 15,6.34 15,8C15,9.66 13.66,11 12,11C10.34,11 9,9.66 9,8C9,6.34 10.34,5 12,5M12,19C9.33,19 7,16.67 7,14C7,11.33 9.33,9 12,9C14.67,9 17,11.33 17,14C17,16.67 14.67,19 12,19Z" />
+            </svg>
+            <span><strong>Privacy Guaranteed:</strong> Files are processed in memory and streamed directly to you. No
+                files are stored on our servers.</span>
+        </div>
+
+        <form id="converterForm">
+            <input type="hidden" id="category" name="category" value="document">
+
+            <div class="upload-area" id="dropArea">
+                <p id="fileLabel">Drag & Drop or Click to Upload PDF</p>
+                <input type="file" id="fileInput" name="file" accept=".pdf,.docx" required>
+            </div>
+
+            <div class="form-group">
+                <label for="format">Convert To</label>
+                <select id="format" name="format">
+                    <option value="jpg">JPG Image</option>
+                    <option value="pdf">PDF Document</option>
+                </select>
+            </div>
+
+            <button type="submit" class="action-btn">Convert Now</button>
+        </form>
+
+        <div id="loading" style="display:none;">
+            <svg style="width:24px;height:24px;vertical-align:middle;margin-right:8px;animation:spin 1s linear infinite"
+                viewBox="0 0 24 24">
+                <path fill="currentColor" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
+            </svg>
+            Processing...
+        </div>
+        <style>
+            @keyframes spin {
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
+
+        <!-- Results div removed, download is automatic -->
+
+        <div class="support-section">
+            <p class="subtitle" style="margin-bottom: 5px;"><strong>Support Developer ❤️</strong></p>
+            <p class="support-text">Berapapun donasi Anda akan sangat bermanfaat untuk kami lebih berkreasi.</p>
+            <a href="https://saweria.co/cikudev" target="_blank" class="saweria-btn">
+                <svg style="width:20px;height:20px" viewBox="0 0 24 24">
+                    <path fill="currentColor"
+                        d="M2,21H20V19H2M20,8H18V5H20M20,3H4V13A4,4 0 0,0 8,17H14A4,4 0 0,0 18,13V10H20A2,2 0 0,0 22,8V5C22,3.89 21.1,3 20,3Z" />
+                </svg>
+                Traktir Kopi di Saweria
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const config = {
+            document: {
+                accept: '.pdf,.docx',
+                label: 'Click to Upload Document (PDF, DOCX)',
+                formats: [
+                    { val: 'jpg', text: 'JPG Image (From PDF)' },
+                    { val: 'pdf', text: 'PDF Document (From DOCX)' }
+                ]
+            },
+            image: {
+                accept: 'image/*',
+                label: 'Click to Upload Image (PNG, JPG, WEBP)',
+                formats: [
+                    { val: 'jpg', text: 'JPG Image' },
+                    { val: 'png', text: 'PNG Image' },
+                    { val: 'webp', text: 'WebP Image' },
+                    { val: 'pdf', text: 'PDF Document' }
+                ]
+            },
+            av: {
+                accept: 'audio/*,video/*',
+                label: 'Click to Upload Audio or Video',
+                formats: [
+                    { val: 'mp3', text: 'MP3 Audio' },
+                    { val: 'mp4', text: 'MP4 Video' },
+                    { val: 'wav', text: 'WAV Audio' },
+                    { val: 'gif', text: 'GIF Animation' }
+                ]
+            }
+        };
+
+        const fileInput = document.getElementById('fileInput');
+        const fileLabel = document.getElementById('fileLabel');
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                fileLabel.textContent = e.target.files[0].name;
+                fileLabel.style.color = '#333';
+            }
+        });
+
+        function setCategory(cat) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('category').value = cat;
+
+            const settings = config[cat];
+            fileLabel.textContent = settings.label;
+            fileLabel.style.color = '#718096';
+            fileInput.accept = settings.accept;
+            fileInput.value = '';
+
+            const formatSelect = document.getElementById('format');
+            formatSelect.innerHTML = '';
+            settings.formats.forEach(f => {
+                const opt = document.createElement('option');
+                opt.value = f.val;
+                opt.textContent = f.text;
+                formatSelect.appendChild(opt);
+            });
+
+            document.getElementById('results').innerHTML = '';
+        }
+
+        document.getElementById('converterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const loadingDiv = document.getElementById('loading');
+
+            loadingDiv.style.display = 'block';
+
+            try {
+                const res = await fetch('/upload', { method: 'POST', body: formData });
+
+                if (res.ok) {
+                    // Start download from blob
+                    const blob = await res.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+
+                    // Try to get filename from header or generate default
+                    const contentDisposition = res.headers.get('Content-Disposition');
+                    let fileName = 'converted_file';
+                    if (contentDisposition) {
+                        const fileNameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+                        if (fileNameMatch && fileNameMatch.length === 2)
+                            fileName = fileNameMatch[1];
+                    }
+                    a.download = fileName;
+
+                    document.body.appendChild(a);
+                    a.click();
+
+                    window.URL.revokeObjectURL(url);
+                    // Optional: Show success message briefly or just reset loading
+                } else {
+                    const errText = await res.text();
+                    alert(`Error: ${errText}`);
+                }
+            } catch (err) {
+                alert(`Error: ${err.message}`);
+            } finally {
+                loadingDiv.style.display = 'none';
+            }
+        });
+
+        // Initial setup for document tab
+        const documentTabBtn = document.querySelector('.tab-btn.active');
+        if (documentTabBtn) {
+            // Mock event to initialize default category format list
+            const mockEvent = { target: documentTabBtn };
+            // But we can't easily mock event.target in global scope call, 
+            // so we just manually init options if needed or let user click.
+            // Actually dynamic population happens on click. 
+            // Let's populate default on load:
+            const formatSelect = document.getElementById('format');
+            formatSelect.innerHTML = '';
+            config.document.formats.forEach(f => {
+                const opt = document.createElement('option');
+                opt.value = f.val;
+                opt.textContent = f.text;
+                formatSelect.appendChild(opt);
+            });
+        }
+    </script>
+</body>
+
+</html>
